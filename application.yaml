@@ -1,0 +1,20 @@
+repository:
+    addr: "redis-17175.c302.asia-northeast1-1.gce.redns.redis-cloud.com:17175"
+    password: "root"
+controller:
+    http:
+        port: 4000
+        timeOutInSeconds: 1
+        maxIdleConns: 100
+        maxIdleConnsPerHost: 1
+loglevel: "debug"
+consuluri: "http://internal-jg-jwr-staging-consul-sg-1553099721.ap-south-1.elb.amazonaws.com:8500"
+consultoken: "457a68a4-4113-771b-f160-eb4bae1dbbcf"
+KVPath: config/kyc-service-qa10
+name: "hello_world_application"
+build: "local"
+monitoring:
+  Name: NEWRELIC
+  NEWRELIC:
+    ServiceName: tds_service_qa8
+    Key: 0e4bb7cee8dbfeaaeed0fb712f77eadfea7f5df7
