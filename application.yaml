@@ -16,5 +16,5 @@ build: "local"
 monitoring:
   Name: NEWRELIC
   NEWRELIC:
-    ServiceName: tds_service_qa8
+    ServiceName: hello_world_service
     Key: 0e4bb7cee8dbfeaaeed0fb712f77eadfea7f5df7

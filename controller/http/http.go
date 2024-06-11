@@ -2,17 +2,16 @@ package http
 
 import (
 	"helloworld/service"
-	"net/http"
 
 	"bitbucket.org/junglee_games/getsetgo/monitoring"
-	"github.com/gin-gonic/gin"
+	"github.com/kataras/iris/v12"
 )
 
 type HttpConfig struct {
-	Port                string `yaml:"port"`
-	TimeOutInSeconds    int    `yaml:"timeOutInSeconds"`
-	MaxIdleConns        int    `yaml:"maxIdleConns"`
-	MaxIdleConnsPerHost int    `yaml:"maxIdleConnsPerHost"`
+	Port                string
+	TimeOutInSeconds    int
+	MaxIdleConns        int
+	MaxIdleConnsPerHost int
 }
 
 type HttpController struct {
@@ -30,14 +29,14 @@ func NewHttpController(config HttpConfig, ma monitoring.Agent, s service.Service
 }
 
 func (c *HttpController) StartListening() error {
-
-	router := gin.Default()
-	router.GET("/greet", func(ctx *gin.Context) {
+	router := iris.New()
+	router.Get("/greet", func(ctx iris.Context) {
 		c.service.Greet(ctx)
 	})
-	err := http.ListenAndServe(":"+c.config.Port, router)
-	if err != nil {
-		return err
-	}
+	// err := http.ListenAndServe(":"+c.config.Port, router)
+	router.Run(iris.Addr(":" + c.config.Port))
+	// if err != nil {
+	// 	return err
+	// }
 	return nil
 }
