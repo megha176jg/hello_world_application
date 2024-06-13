@@ -5,11 +5,10 @@ import (
 
 	ac "helloworld/business/config"
 
-	"bitbucket.org/junglee_games/getsetgo/instrumenting/newrelic"
+	"bitbucket.org/junglee_games/getsetgo/configs"
 	"bitbucket.org/junglee_games/getsetgo/logger"
-	"bitbucket.org/junglee_games/getsetgo/monitoring"
+	"bitbucket.org/junglee_games/getsetgo/monitoring/monitoringfactory"
 	"github.com/kataras/iris/v12"
-	nrf "github.com/newrelic/go-agent/v3/newrelic"
 )
 
 type Service interface {
@@ -17,9 +16,9 @@ type Service interface {
 }
 
 type service struct {
-	monitoringAgent monitoring.Agent
-	repo            repository.Repository
-	appConf         ac.AppConf
+	repo             repository.Repository
+	monitoringConfig *configs.DefaultMonitoringConfig
+	appConf          ac.AppConf
 }
 
 type result struct {
@@ -27,29 +26,30 @@ type result struct {
 	Age  string
 }
 
-func NewService(repo repository.Repository, ma monitoring.Agent, a ac.AppConf) *service {
+func NewService(repo repository.Repository, m *configs.DefaultMonitoringConfig, a ac.AppConf) *service {
 	return &service{
-		repo:            repo,
-		monitoringAgent: ma,
-		appConf:         a,
+		repo:             repo,
+		monitoringConfig: m,
+		appConf:          a,
 	}
 }
 
 func (s *service) Greet(ctx iris.Context) {
-	txnObject, err := newrelic.GetNewrelicTxn(ctx)
+
+	agent, err := monitoringfactory.GetMonitoringAgent(s.monitoringConfig)
 	if err != nil {
-		logger.Error(ctx, "unable to load get newrelic txnobject")
+		panic(err)
 	}
-	newCtx := nrf.NewContext(ctx.Request().Context(), txnObject)
-	defer nrf.FromContext(newCtx).StartSegment("Greeting").End()
+	defer agent.StartTransaction("Greeting").End()
 	firstname := ctx.URLParam("name")
-	title, _ := s.repo.GetTitle(firstname)
-	// if err != nil {
-	// }
+	title, err := s.repo.GetTitle(firstname)
+	if err != nil {
+		logger.Error(ctx, "unable to get the title")
+		return
+	}
 	ctx.StatusCode(200)
 	ctx.JSON(result{
-		Name: firstname + title,
+		Name: firstname + " " + title,
 		Age:  s.appConf.MinAge,
 	})
-
 }

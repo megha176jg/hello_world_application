@@ -44,7 +44,7 @@ func main() {
 		Addr:     conf.Repository.Addr,
 		Password: conf.Repository.Password,
 	}, monitoringAgent)
-	service := service.NewService(repository, monitoringAgent, *conf.Application)
-	controller := controller.NewController(conf.Controller, monitoringAgent, service)
+	service := service.NewService(repository, conf.Monitoring, *conf.Application)
+	controller := controller.NewController(conf.Controller, service)
 	controller.StartListening()
 }

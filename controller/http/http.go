@@ -3,7 +3,6 @@ package http
 import (
 	"helloworld/service"
 
-	"bitbucket.org/junglee_games/getsetgo/monitoring"
 	"github.com/kataras/iris/v12"
 )
 
@@ -15,16 +14,14 @@ type HttpConfig struct {
 }
 
 type HttpController struct {
-	config          HttpConfig
-	monitoringAgent monitoring.Agent
-	service         service.Service
+	config  HttpConfig
+	service service.Service
 }
 
-func NewHttpController(config HttpConfig, ma monitoring.Agent, s service.Service) *HttpController {
+func NewHttpController(config HttpConfig, s service.Service) *HttpController {
 	return &HttpController{
-		config:          config,
-		monitoringAgent: ma,
-		service:         s,
+		config:  config,
+		service: s,
 	}
 }
 

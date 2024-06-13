@@ -28,8 +28,7 @@ type Config struct {
 	KVPath      string
 	Name        string
 	Build       string
-
-	Monitoring *configs.DefaultMonitoringConfig
+	Monitoring  *configs.DefaultMonitoringConfig
 }
 
 func (c *Config) GetBuild() string {
