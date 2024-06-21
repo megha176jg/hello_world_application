@@ -56,7 +56,11 @@ func GetConfig(ctx context.Context, env, path string) *Config {
 	var appConf = ac.New()
 	err = ag.InitAndGetConfig(appConf)
 	if err != nil {
-		logger.Panic(ctx, "while getting config from consul", err.Error())
+		// logger.Panic(ctx, "while getting config from consul", err.Error())
+		// bypassing consul configuration
+		appConf = &ac.AppConf{
+			MinAge: "18",
+		}
 	}
 	conf.Application = appConf
 	return &conf
