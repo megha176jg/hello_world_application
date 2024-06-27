@@ -6,13 +6,11 @@ import (
 	ac "helloworld/business/config"
 
 	"bitbucket.org/junglee_games/getsetgo/configs"
-	"bitbucket.org/junglee_games/getsetgo/logger"
-	"bitbucket.org/junglee_games/getsetgo/monitoring/monitoringfactory"
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 )
 
 type Service interface {
-	Greet(ctx iris.Context)
+	Greet(ctx *gin.Context)
 }
 
 type service struct {
@@ -34,22 +32,25 @@ func NewService(repo repository.Repository, m *configs.DefaultMonitoringConfig, 
 	}
 }
 
-func (s *service) Greet(ctx iris.Context) {
+// @Summary		Add a new pet to the store
+// @Description	get string by ID
+// @Accept		*/*
+// @Produce		json
+// @Param		name	path		string	true	"Some Name"
+// @Success		200		{string}	string	"ok"
+// @Router		/greet [get]
+func (s *service) Greet(ctx *gin.Context) {
 
-	agent, err := monitoringfactory.GetMonitoringAgent(s.monitoringConfig)
-	if err != nil {
-		panic(err)
-	}
-	defer agent.StartTransaction("Greeting").End()
-	firstname := ctx.URLParam("name")
-	title, err := s.repo.GetTitle(firstname)
-	if err != nil {
-		logger.Error(ctx, "unable to get the title")
+	name, ok := ctx.GetQuery("name")
+	if ok != true {
+		ctx.JSON(400, gin.H{"error": "name is required"})
 		return
 	}
-	ctx.StatusCode(200)
-	ctx.JSON(result{
-		Name: firstname + " " + title,
-		Age:  s.appConf.MinAge,
-	})
+	title, err := s.repo.GetTitle(name)
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, gin.H{"message": "Hello, " + name + " " + title,
+		"age": "Min age is:" + s.appConf.MinAge})
 }

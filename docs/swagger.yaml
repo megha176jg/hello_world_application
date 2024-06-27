@@ -1,0 +1,23 @@
+info:
+  contact: {}
+paths:
+  /greet:
+    get:
+      consumes:
+      - '*/*'
+      description: get string by ID
+      parameters:
+      - description: Some Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Add a new pet to the store
+swagger: "2.0"

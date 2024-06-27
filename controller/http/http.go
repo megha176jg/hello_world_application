@@ -1,9 +1,13 @@
 package http
 
 import (
+	_ "helloworld/docs"
 	"helloworld/service"
+	"net/http"
 
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type HttpConfig struct {
@@ -26,14 +30,15 @@ func NewHttpController(config HttpConfig, s service.Service) *HttpController {
 }
 
 func (c *HttpController) StartListening() error {
-	router := iris.New()
-	router.Get("/greet", func(ctx iris.Context) {
+	router := gin.Default()
+	router.GET("/greet", func(ctx *gin.Context) {
 		c.service.Greet(ctx)
 	})
-	// err := http.ListenAndServe(":"+c.config.Port, router)
-	router.Run(iris.Addr(":" + c.config.Port))
-	// if err != nil {
-	// 	return err
-	// }
+
+	router.GET("/helloworldservice/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	err := http.ListenAndServe(":"+c.config.Port, router)
+	if err != nil {
+		return err
+	}
 	return nil
 }

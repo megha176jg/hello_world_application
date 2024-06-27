@@ -18,16 +18,15 @@ import (
 // 	App string
 // }
 
-// func (c *AppConfig) GetBuild() string {
-// 	return "local"
-// }
-
+//	func (c *AppConfig) GetBuild() string {
+//		return "local"
+//	}
 func main() {
-
 	ctx := context.Background()
+
 	// var appconfig AppConfig
 	// if err := config.LoadConfig("application", "./", &appconfig); err != nil {
-	// 	logger.Panic(ctx, "failed to load a config, %v", err.Error())
+	// logger.Panic(ctx, "failed to load a config, %v", err.Error())
 	// }
 	conf := myconfig.GetConfig(ctx, "application", "./")
 	logger.Config{AppName: conf.Name, Build: conf.Build, Level: logger.LogLevel(conf.LogLevel)}.InitiateLogger()
