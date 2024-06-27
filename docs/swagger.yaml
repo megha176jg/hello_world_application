@@ -1,14 +1,14 @@
 info:
   contact: {}
 paths:
-  /greet:
+  /greet/:
     get:
       consumes:
       - '*/*'
-      description: get string by ID
+      description: get title by name
       parameters:
       - description: Some Name
-        in: path
+        in: query
         name: name
         required: true
         type: string
@@ -19,5 +19,5 @@ paths:
           description: ok
           schema:
             type: string
-      summary: Add a new pet to the store
+      summary: Greet name
 swagger: "2.0"

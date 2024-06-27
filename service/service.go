@@ -32,13 +32,13 @@ func NewService(repo repository.Repository, m *configs.DefaultMonitoringConfig, 
 	}
 }
 
-// @Summary		Add a new pet to the store
-// @Description	get string by ID
+// @Summary		Greet name
+// @Description	get title by name
 // @Accept		*/*
 // @Produce		json
-// @Param		name	path		string	true	"Some Name"
+// @Param		name	query		string	true	"Some Name"
 // @Success		200		{string}	string	"ok"
-// @Router		/greet [get]
+// @Router		/greet/ [get]
 func (s *service) Greet(ctx *gin.Context) {
 
 	name, ok := ctx.GetQuery("name")

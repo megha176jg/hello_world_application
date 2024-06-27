@@ -15,22 +15,22 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/greet": {
+        "/greet/": {
             "get": {
-                "description": "get string by ID",
+                "description": "get title by name",
                 "consumes": [
                     "*/*"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Add a new pet to the store",
+                "summary": "Greet name",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Some Name",
                         "name": "name",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
